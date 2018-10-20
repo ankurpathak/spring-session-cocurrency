@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login page</title>
+    <style>
+        #errors{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>Login page</h1>
+<p id="errors" th:if="${#request.getParameter('error') != null}">
+    Incorrect Username or Password
+</p>
+<form th:action="@{/login}" method="post">
+    <label for="username">Username</label>:
+    <input type="text" value="ankur" id="username" name="username" autofocus="autofocus" /> <br />
+    <label for="password">Password</label>:
+    <input type="text" id="password" name="password" value="password" /> <br />
+    <input type="submit" value="Log in" />
+</form>
+</body>
+</html>

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 
 import java.util.UUID;
 
@@ -16,6 +18,9 @@ public class FilterConfig {
     private  final RestSavedRequestAwareAuthenticationSuccessHandler restAuthenticationSuccessHandler;
     @Autowired
     private final ObjectMapper objectMapper;
+
+    @Autowired
+    private SessionRegistry sessionRegistry;
 
 
 
@@ -35,10 +40,15 @@ public class FilterConfig {
         filter.setAuthenticationManager(authenticationManager);
         filter.setAuthenticationFailureHandler(restAuthenticationFailureHandler);
         filter.setAuthenticationSuccessHandler(restAuthenticationSuccessHandler);
+        filter.setSessionAuthenticationStrategy(authStrategy());
         return filter;
     }
 
-
-
+    private ConcurrentSessionControlAuthenticationStrategy authStrategy() {
+        ConcurrentSessionControlAuthenticationStrategy result = new ConcurrentSessionControlAuthenticationStrategy(
+                this.sessionRegistry);
+        result.setExceptionIfMaximumExceeded(true);
+        return result;
+    }
 
 }
